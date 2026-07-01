@@ -1,0 +1,72 @@
+### ----------- .NET / C# ----------- ###
+# Build results
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Dd]ebug/
+[Rr]elease/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+
+# NuGet
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+# ASP.NET Core secrets / local config
+appsettings.Development.json
+appsettings.*.local.json
+secrets.json
+
+# SQLite database files (generated locally)
+*.db
+*.db-shm
+*.db-wal
+
+# Publish output
+[Pp]ublish/
+
+### ----------- Angular / Node ----------- ###
+# Dependencies
+node_modules/
+
+# Angular build output
+/dist/
+/tmp/
+/out-tsc/
+/bazel-out/
+
+# Angular cache
+.angular/cache/
+
+# Editor / OS
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Environment files with secrets (frontend)
+.env
+.env.local
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log
+yarn-error.log
+
+### ----------- General ----------- ###
+*.log
+*.tmp
