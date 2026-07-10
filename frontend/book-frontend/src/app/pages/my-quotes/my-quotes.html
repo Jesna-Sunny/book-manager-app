@@ -1,1 +1,22 @@
-<p>my-quotes works!</p>
+<h2><i class="fa-solid fa-quote-left"></i> My Quotes</h2>
+
+<div class="input-group my-3">
+  <input type="text" class="form-control" placeholder="Add a new quote..." [(ngModel)]="newQuoteText" />
+  <button class="btn btn-primary" (click)="addQuote()"><i class="fa-solid fa-plus"></i> Add</button>
+</div>
+
+<ul class="list-group">
+  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let quote of quotes">
+    <ng-container *ngIf="editingId === quote.id; else displayMode">
+      <input type="text" class="form-control me-2" [(ngModel)]="editingText" />
+      <button class="btn btn-sm btn-success" (click)="saveEdit(quote.id)"><i class="fa-solid fa-check"></i></button>
+    </ng-container>
+    <ng-template #displayMode>
+      <span>"{{ quote.text }}"</span>
+      <div class="d-flex gap-2">
+        <button class="btn btn-sm btn-outline-secondary" (click)="startEdit(quote)"><i class="fa-solid fa-pen"></i></button>
+        <button class="btn btn-sm btn-outline-danger" (click)="removeQuote(quote.id)"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    </ng-template>
+  </li>
+</ul>

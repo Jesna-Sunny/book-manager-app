@@ -5,6 +5,12 @@
   </button>
   <div class="collapse navbar-collapse" id="navMenu">
     <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+  <button class="btn btn-sm btn-outline-light ms-2" (click)="toggleDarkMode()">
+    <i class="fa-solid fa-moon"></i>
+  </button>
+</li>
+    
       <li class="nav-item"><a class="nav-link" routerLink="/">Books</a></li>
       <li class="nav-item"><a class="nav-link" routerLink="/quotes">My Quotes</a></li>
       <li class="nav-item" *ngIf="!authService.isLoggedIn()">
@@ -15,11 +21,6 @@
       </li>
       <li class="nav-item" *ngIf="authService.isLoggedIn()">
         <a class="nav-link" href="javascript:void(0)" (click)="logout()">Logout</a>
-      </li>
-      <li class="nav-item">
-        <button class="btn btn-sm btn-outline-light ms-2" (click)="toggleDarkMode()">
-          <i class="fa-solid fa-moon"></i>
-        </button>
       </li>
     </ul>
   </div>
