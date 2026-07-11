@@ -7,8 +7,7 @@ import { Book } from '../models/book';
   providedIn: 'root',
 })
 export class BookService {
-  private apiUrl = 'http://localhost:5272/api/books';
-
+  private apiUrl = 'https://book-manager-app-n7ns.onrender.com/api/books';
   constructor(private http: HttpClient) {}
 
   getBooks(): Observable<Book[]> {

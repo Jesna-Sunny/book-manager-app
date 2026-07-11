@@ -7,7 +7,7 @@ import { AuthResponse } from '../models/auth';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5272/api/auth';
+  private apiUrl = 'https://book-manager-app-n7ns.onrender.com/api/auth';
   private tokenKey = 'auth_token';
 
   constructor(private http: HttpClient) {}
