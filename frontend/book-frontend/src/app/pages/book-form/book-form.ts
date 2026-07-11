@@ -37,12 +37,12 @@ export class BookForm implements OnInit {
   onSubmit(): void {
     if (this.isEditMode && this.bookId !== null) {
       this.bookService.updateBook(this.bookId, this.book as Book).subscribe({
-        next: () => this.router.navigate(['/']),
+        next: () => this.router.navigate(['/'], { queryParams: { updated: '1' } }),
         error: (err) => console.error('Failed to update book', err),
       });
     } else {
       this.bookService.addBook(this.book).subscribe({
-        next: () => this.router.navigate(['/']),
+        next: () => this.router.navigate(['/'], { queryParams: { added: '1' } }),
         error: (err) => console.error('Failed to add book', err),
       });
     }
