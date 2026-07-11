@@ -15,8 +15,13 @@ export class Register {
   password = '';
   errorMessage = '';
   successMessage = '';
+  showPassword = false;
 
   constructor(private authService: AuthService, private router: Router) {}
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
   onSubmit(): void {
     this.authService.register(this.username, this.password).subscribe({
