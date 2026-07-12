@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using BookApi.Data;
 using BookApi.Models;
+using System.Security.Claims;
 
 namespace BookApi.Controllers;
 
@@ -18,18 +19,33 @@ public class BooksController : ControllerBase
         _context = context;
     }
 
+    private async Task<int?> GetCurrentUserId()
+    {
+        var username = User.FindFirstValue(ClaimTypes.Name);
+        if (username == null) return null;
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        return user?.Id;
+    }
+
     // GET: api/books
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
     {
-        return await _context.Books.ToListAsync();
+        var userId = await GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        return await _context.Books.Where(b => b.UserId == userId).ToListAsync();
     }
 
     // GET: api/books/5
     [HttpGet("{id}")]
     public async Task<ActionResult<Book>> GetBook(int id)
     {
-        var book = await _context.Books.FindAsync(id);
+        var userId = await GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
 
         if (book == null)
         {
@@ -43,6 +59,10 @@ public class BooksController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Book>> CreateBook(Book book)
     {
+        var userId = await GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        book.UserId = userId.Value;
         _context.Books.Add(book);
         await _context.SaveChangesAsync();
 
@@ -53,28 +73,20 @@ public class BooksController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateBook(int id, Book book)
     {
-        if (id != book.Id)
+        var userId = await GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var existingBook = await _context.Books.FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
+        if (existingBook == null)
         {
-            return BadRequest();
+            return NotFound();
         }
 
-        _context.Entry(book).State = EntityState.Modified;
+        existingBook.Title = book.Title;
+        existingBook.Author = book.Author;
+        existingBook.PublicationDate = book.PublicationDate;
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!BookExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
+        await _context.SaveChangesAsync();
 
         return NoContent();
     }
@@ -83,7 +95,10 @@ public class BooksController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBook(int id)
     {
-        var book = await _context.Books.FindAsync(id);
+        var userId = await GetCurrentUserId();
+        if (userId == null) return Unauthorized();
+
+        var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id && b.UserId == userId);
         if (book == null)
         {
             return NotFound();
@@ -93,10 +108,5 @@ public class BooksController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    private bool BookExists(int id)
-    {
-        return _context.Books.Any(e => e.Id == id);
     }
 }
